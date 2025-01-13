@@ -45,24 +45,40 @@ const login = async (req, res) => {
 };
 
 
-
-const getFavourites = async (req, res) => {
+const createFavorite = async (req, res) => {
   try {
-    const user = req.user;
-    const favourites = user.favourites;
-    res.status(200).json({ favourites });
-  } catch (error) {
-    res.status(500).json({ message: 'Error getting favourites', error });
+    const { userId, recipeId } = req.body;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    user.favourites.push(recipeId);
+    await user.save();
+    res.status(200).json({ message: 'Recipe added to favourites', user });
   }
-};
+  catch (error) {
+    res.status(500).json({ message: 'Error adding favourite', error });
+  }
+}
 
-
+const removeFavorite = async (req, res) => {
+  try {
+    const { userId, recipeId } = req.body;
+    const user = await User.findById(userId); 
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    user.favourites = user.favourites.filter(fav => fav !== recipeId);
+    await user.save();
+    res.status(200).json({ message: 'Recipe removed from favourites', user });
+  }
+  catch (error) {
+    res.status(500).json({ message: 'Error removing favourite', error });
+  }
+}
 
 
 module.exports = {
   signup,
   login,
-  getFavourites
+  createFavorite,
+  removeFavorite
 };
 
 
