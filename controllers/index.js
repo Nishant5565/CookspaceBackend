@@ -50,7 +50,9 @@ const createFavorite = async (req, res) => {
     const { userId, recipeId } = req.body;
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
-    user.favourites.push(recipeId);
+    
+    const recipeIdNumber = typeof recipeId === 'string' ? Number(recipeId) : recipeId;
+    user.favourites.push(recipeIdNumber);
     await user.save();
     res.status(200).json({ message: 'Recipe added to favourites', user });
   }
@@ -64,7 +66,9 @@ const removeFavorite = async (req, res) => {
     const { userId, recipeId } = req.body;
     const user = await User.findById(userId); 
     if (!user) return res.status(404).json({ message: 'User not found' });
-    user.favourites = user.favourites.filter(fav => fav !== recipeId);
+    
+    const recipeIdNumber = typeof recipeId === 'string' ? Number(recipeId) : recipeId;
+    user.favourites = user.favourites.filter(fav => fav !== recipeIdNumber);
     await user.save();
     res.status(200).json({ message: 'Recipe removed from favourites', user });
   }
