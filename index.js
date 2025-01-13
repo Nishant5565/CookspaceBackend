@@ -38,21 +38,10 @@ mongoose.connect(MONGODBURL)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error(MONGODBURL, 'MongoDB connection error:', err));
 
-app.get('/api-docs', (req, res) => {
+app.get('/', (req, res) => {
   res.send(`
-    <h1>API Documentation</h1>
-    <ul>
-      <li>POST /signup</li>
-      <li>POST /login</li>
-      <li>GET /protected</li>
-      <li>GET /packages</li>
-      <li>GET /packages/:id</li>
-      <li>POST /bookings</li>
-      <li>POST /packages</li>
-      <li>PUT /packages/:id</li>
-      <li>DELETE /packages/:id</li>
-      <li>GET /bookings</li>
-    </ul>
+    <h1>Server is running </h1>
+
   `);
 });
 app.use('/api',require('./routes'));
